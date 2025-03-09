@@ -1,0 +1,32 @@
+-- CreateTable
+CREATE TABLE "client" (
+    "id" SERIAL NOT NULL,
+    "created_time" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated_time" TIMESTAMP(3) NOT NULL,
+    "first_name" TEXT NOT NULL,
+    "last_name" TEXT NOT NULL,
+    "email" TEXT,
+    "phone" TEXT,
+    "address" TEXT,
+    "city" TEXT,
+    "state" TEXT,
+    "zip_code" TEXT,
+    "status" TEXT NOT NULL,
+    "source" TEXT,
+    "notes" TEXT,
+    "last_contact_date" TIMESTAMP(3),
+    "next_follow_up" TIMESTAMP(3),
+    "budget_min" DOUBLE PRECISION,
+    "budget_max" DOUBLE PRECISION,
+    "property_type" TEXT,
+    "bedrooms" INTEGER,
+    "bathrooms" DOUBLE PRECISION,
+    "square_feet_min" INTEGER,
+    "square_feet_max" INTEGER,
+    "preferred_areas" TEXT[],
+    "assigned_agent" TEXT,
+    "external_crm_id" TEXT,
+    "external_crm_type" TEXT,
+
+    CONSTRAINT "client_pkey" PRIMARY KEY ("id")
+);

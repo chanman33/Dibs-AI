@@ -9,20 +9,21 @@ datasource db {
 }
 
 model user {
-  id                Int      @id @default(autoincrement())
-  created_time      DateTime @default(now())
-  email             String   @unique
+  id                Int             @id @default(autoincrement())
+  created_time      DateTime        @default(now()) @map("created_time")
+  email             String          @unique
   first_name        String?
   last_name         String?
   gender            String?
   profile_image_url String?
-  user_id           String   @unique
+  user_id           String          @unique
   subscription      String?
+  conversations     conversation[]  // Relation to conversations
 }
 
 model payments {
   id               Int      @id @default(autoincrement())
-  created_time     DateTime @default(now())
+  created_time     DateTime @default(now()) @map("created_time")
   stripe_id        String
   email            String
   amount           String
@@ -36,7 +37,7 @@ model payments {
 
 model subscriptions {
   id                        Int      @id @default(autoincrement())
-  created_time              DateTime @default(now())
+  created_time              DateTime @default(now()) @map("created_time")
   subscription_id           String
   stripe_user_id            String
   status                    String
@@ -50,7 +51,7 @@ model subscriptions {
 
 model subscriptions_plans {
   id           Int      @id @default(autoincrement())
-  created_time DateTime @default(now())
+  created_time DateTime @default(now()) @map("created_time")
   plan_id      String
   name         String
   description  String
@@ -61,7 +62,7 @@ model subscriptions_plans {
 
 model invoices {
   id              Int      @id @default(autoincrement())
-  created_time    DateTime @default(now())
+  created_time    DateTime @default(now()) @map("created_time")
   invoice_id      String
   subscription_id String
   amount_paid     String
@@ -70,4 +71,74 @@ model invoices {
   status          String
   email           String
   user_id         String?
+}
+
+// New models for chat functionality
+model conversation {
+  id           Int       @id @default(autoincrement())
+  created_time DateTime  @default(now()) @map("created_time")
+  updated_time DateTime  @updatedAt @map("updated_time")
+  title        String?
+  user         user      @relation(fields: [user_id], references: [user_id])
+  user_id      String
+  messages     message[]
+  property     property? @relation(fields: [property_id], references: [id])
+  property_id  Int?
+}
+
+model message {
+  id              Int          @id @default(autoincrement())
+  created_time    DateTime     @default(now()) @map("created_time")
+  content         String
+  role            String       // 'user' or 'assistant'
+  conversation    conversation @relation(fields: [conversation_id], references: [id], onDelete: Cascade)
+  conversation_id Int
+}
+
+model property {
+  id             Int            @id @default(autoincrement())
+  created_time   DateTime       @default(now()) @map("created_time")
+  address        String
+  city           String
+  state          String
+  zip_code       String
+  price          Float
+  bedrooms       Int
+  bathrooms      Float
+  square_feet    Int
+  property_type  String
+  year_built     Int?
+  description    String?
+  image_urls     String[]
+  conversations  conversation[]
+}
+
+model client {
+  id                Int       @id @default(autoincrement())
+  created_time      DateTime  @default(now()) @map("created_time")
+  updated_time      DateTime  @updatedAt @map("updated_time")
+  first_name        String
+  last_name         String
+  email             String?
+  phone             String?
+  address           String?
+  city              String?
+  state             String?
+  zip_code          String?
+  status            String    // e.g., "Lead", "Active", "Closed", "Lost"
+  source            String?   // e.g., "Referral", "Website", "Zillow", etc.
+  notes             String?
+  last_contact_date DateTime?
+  next_follow_up    DateTime?
+  budget_min        Float?
+  budget_max        Float?
+  property_type     String?   // e.g., "Single Family", "Condo", "Multi-Family"
+  bedrooms          Int?
+  bathrooms         Float?
+  square_feet_min   Int?
+  square_feet_max   Int?
+  preferred_areas   String[]
+  assigned_agent    String?   // Could be linked to a user in the future
+  external_crm_id   String?   // For integration with external CRMs
+  external_crm_type String?   // e.g., "Hubspot", "Salesforce"
 }
