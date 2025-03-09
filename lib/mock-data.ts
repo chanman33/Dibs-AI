@@ -16,14 +16,18 @@ const sources = [
   "Other"
 ]
 
-// Property types
+// Property types (expanded from client property types)
 const propertyTypes = [
   "Single Family",
   "Condo",
   "Townhouse",
   "Multi-Family",
   "Land",
-  "Commercial"
+  "Commercial",
+  "Apartment",
+  "Mobile Home",
+  "Farm",
+  "Ranch"
 ]
 
 // Agent names
@@ -53,6 +57,44 @@ const lastNames = [
   "White", "Harris", "Sanchez", "Clark", "Ramirez", "Lewis", "Robinson", "Walker",
   "Young", "Allen", "King", "Wright", "Scott", "Torres", "Nguyen", "Hill", "Flores",
   "Green", "Adams", "Nelson", "Baker", "Hall", "Rivera", "Campbell", "Mitchell"
+]
+
+// Cities
+const cities = [
+  "San Francisco",
+  "Oakland",
+  "Berkeley",
+  "San Jose",
+  "Palo Alto",
+  "Mountain View",
+  "Sunnyvale",
+  "Santa Clara",
+  "Fremont",
+  "Walnut Creek"
+]
+
+// States
+const states = ["CA"]
+
+// Street names
+const streetNames = [
+  "Main Street", "Oak Avenue", "Maple Drive", "Cedar Lane", "Pine Street",
+  "Elm Road", "Washington Avenue", "Park Place", "Lake View Drive", "Forest Way",
+  "River Road", "Mountain View", "Sunset Boulevard", "Valley Road", "Highland Avenue"
+]
+
+// Property descriptions
+const propertyDescriptions = [
+  "Stunning home with modern finishes and open floor plan",
+  "Charming property in a quiet neighborhood with great schools",
+  "Luxurious estate with panoramic views and high-end amenities",
+  "Cozy starter home perfect for first-time buyers",
+  "Investment opportunity in a rapidly growing area",
+  "Beautiful home with updated kitchen and bathrooms",
+  "Spacious property with large backyard and pool",
+  "Modern design meets classic comfort in this exceptional home",
+  "Prime location near shopping, dining, and transportation",
+  "Recently renovated property with smart home features"
 ]
 
 // Simple deterministic pseudo-random number generator
@@ -124,6 +166,8 @@ const generateMockClient = (id: number): Client => {
   
   return {
     id,
+    created_time: now,
+    updated_time: now,
     first_name: firstName,
     last_name: lastName,
     email,
@@ -145,5 +189,95 @@ export const generateMockClients = (count: number = 100): Client[] => {
   return Array.from({ length: count }, (_, i) => generateMockClient(i + 1))
 }
 
-// Export a pre-generated set of clients for consistent data
-export const mockClients = generateMockClients(50) 
+// Generate a mock property
+export type Property = {
+  id: number
+  created_time: Date
+  address: string
+  city: string
+  state: string
+  zip_code: string
+  price: number
+  bedrooms: number
+  bathrooms: number
+  square_feet: number
+  property_type: string
+  year_built: number | null
+  description: string | null
+  image_urls: string[]
+}
+
+const generateMockProperty = (id: number): Property => {
+  const now = new Date('2024-03-09T00:00:00Z')
+  const propertyType = random.pickElement(propertyTypes)
+  const city = random.pickElement(cities)
+  const state = random.pickElement(states)
+  
+  // Generate address
+  const houseNumber = random.nextInt(100, 9999)
+  const street = random.pickElement(streetNames)
+  const address = `${houseNumber} ${street}`
+  
+  // Generate realistic property details based on type
+  const isHouse = ["Single Family", "Multi-Family", "Farm", "Ranch"].includes(propertyType)
+  const isCondo = ["Condo", "Townhouse", "Apartment"].includes(propertyType)
+  
+  // Adjust ranges based on property type
+  const squareFeet = isHouse 
+    ? random.nextInt(1500, 5000)
+    : isCondo 
+      ? random.nextInt(600, 2000)
+      : random.nextInt(1000, 10000)
+  
+  const bedrooms = isHouse
+    ? random.nextInt(3, 6)
+    : isCondo
+      ? random.nextInt(1, 3)
+      : random.nextInt(1, 8)
+  
+  const bathrooms = Math.min(bedrooms + 1, random.nextInt(2, 5))
+  
+  // Price based on size and location (using simple formula)
+  const pricePerSqFt = random.nextInt(500, 1200)
+  const basePrice = squareFeet * pricePerSqFt
+  const locationMultiplier = city === "San Francisco" ? 1.5 : 1.2
+  const price = Math.round(basePrice * locationMultiplier)
+  
+  // Year built (null for land/commercial)
+  const yearBuilt = ["Land", "Commercial"].includes(propertyType)
+    ? null
+    : random.nextInt(1950, 2024)
+  
+  // Generate 1-3 image URLs (placeholder format)
+  const imageCount = random.nextInt(1, 3)
+  const imageUrls = Array.from(
+    { length: imageCount },
+    (_, i) => `https://picsum.photos/seed/${id}-${i}/800/600`
+  )
+  
+  return {
+    id,
+    created_time: now,
+    address,
+    city,
+    state,
+    zip_code: `9${random.nextInt(4000, 4999)}`,  // CA zip codes
+    price,
+    bedrooms,
+    bathrooms,
+    square_feet: squareFeet,
+    property_type: propertyType,
+    year_built: yearBuilt,
+    description: random.pickElement(propertyDescriptions),
+    image_urls: imageUrls
+  }
+}
+
+// Generate an array of mock properties
+export const generateMockProperties = (count: number = 50): Property[] => {
+  return Array.from({ length: count }, (_, i) => generateMockProperty(i + 1))
+}
+
+// Export pre-generated sets for consistent data
+export const mockClients = generateMockClients(50)
+export const mockProperties = generateMockProperties(50) 

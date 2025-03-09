@@ -95,7 +95,7 @@ export async function deleteClient(id: number) {
 }
 
 // Seed the database with mock clients
-export async function seedClients(count: number = 50) {
+export async function seedClients(count: number = 50, skipRevalidation = false) {
   const supabase = createSupabaseClient()
   
   // First check if we already have clients
@@ -134,6 +134,9 @@ export async function seedClients(count: number = 50) {
     throw new Error('Failed to seed clients')
   }
   
-  revalidatePath('/dashboard/crm')
+  if (!skipRevalidation) {
+    revalidatePath('/dashboard/crm')
+  }
+  
   return { message: `Successfully seeded ${mockClients.length} clients` }
 } 

@@ -20,6 +20,8 @@ import { toast } from "sonner"
 // Define the client type based on our Prisma schema
 export type Client = {
   id: number
+  created_time: Date
+  updated_time: Date
   first_name: string
   last_name: string
   email: string | null
