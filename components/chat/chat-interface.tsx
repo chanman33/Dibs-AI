@@ -9,7 +9,7 @@ import { Avatar } from '@/components/ui/avatar';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Separator } from '@/components/ui/separator';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { PlusCircle, Send, Home, Building, Search, History, Sparkles, Trash2 } from 'lucide-react';
+import { PlusCircle, Send, Home, Building, Search, Sparkles, Trash2 } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Conversation } from '@/lib/services/chat-service';
 import { toast } from 'sonner';
@@ -147,251 +147,176 @@ export default function ChatInterface() {
   };
 
   return (
-    <div className="flex h-[calc(100vh-120px)] w-full max-w-6xl mx-auto">
-      {/* Sidebar */}
-      <div className="hidden md:flex flex-col w-64 border-r p-4 space-y-4">
-        <Button 
-          variant="outline" 
-          className="justify-start gap-2"
-          onClick={createNewConversation}
-          disabled={isLoadingConversations}
-        >
-          <PlusCircle size={16} />
-          New Conversation
-        </Button>
-        
-        <Separator />
-        
-        <div className="space-y-1">
-          <h3 className="text-sm font-medium">Property Tools</h3>
-          <Button variant="ghost" className="w-full justify-start gap-2">
-            <Search size={16} />
-            Find Properties
-          </Button>
-          <Button variant="ghost" className="w-full justify-start gap-2">
-            <Building size={16} />
-            Property Analysis
-          </Button>
-          <Button variant="ghost" className="w-full justify-start gap-2">
-            <Home size={16} />
-            Mortgage Calculator
-          </Button>
-        </div>
-        
-        <Separator />
-        
-        <div className="space-y-1">
-          <h3 className="text-sm font-medium">Recent Conversations</h3>
-          <div className="space-y-1">
-            {isLoadingConversations ? (
-              <div className="text-sm text-muted-foreground p-2">Loading...</div>
-            ) : conversations.length === 0 ? (
-              <div className="text-sm text-muted-foreground p-2">No conversations yet</div>
-            ) : (
-              conversations.map((conversation) => (
-                <div key={conversation.id} className="flex items-center">
-                  <Button 
-                    variant={activeConversationId === conversation.id ? "secondary" : "ghost"} 
-                    className="w-full justify-start text-left"
-                    onClick={() => loadConversation(conversation.id!)}
-                  >
-                    <div className="truncate">{conversation.title}</div>
-                  </Button>
-                  <Button 
-                    variant="ghost" 
-                    size="icon" 
-                    className="h-8 w-8"
-                    onClick={() => deleteConversation(conversation.id!)}
-                  >
-                    <Trash2 size={14} />
-                  </Button>
-                </div>
-              ))
-            )}
-          </div>
-        </div>
-      </div>
-
-      {/* Main Chat Area */}
-      <div className="flex-1 flex flex-col">
-        <Tabs defaultValue="chat" className="flex-1 flex flex-col" onValueChange={setActiveTab}>
-          <div className="border-b px-4 py-2">
-            <TabsList className="grid grid-cols-3">
-              <TabsTrigger value="chat">Chat</TabsTrigger>
-              <TabsTrigger value="properties">Properties</TabsTrigger>
-              <TabsTrigger value="history">History</TabsTrigger>
-            </TabsList>
-          </div>
-
-          <TabsContent value="chat" className="flex-1 flex flex-col p-4 space-y-4 overflow-hidden">
-            {messages.length === 0 ? (
-              <div className="flex-1 flex flex-col items-center justify-center text-center p-8 space-y-4">
-                <div className="bg-primary/10 p-4 rounded-full">
-                  <Sparkles className="h-10 w-10 text-primary" />
-                </div>
-                <h2 className="text-2xl font-bold">Welcome to Dibs AI</h2>
-                <p className="text-muted-foreground max-w-md">
-                  Your intelligent real estate assistant. Ask me about properties, market trends, investment strategies, or anything real estate related.
-                </p>
-                <div className="grid gap-2 mt-4">
-                  <Button 
-                    variant="outline" 
-                    className="justify-start"
-                    onClick={() => {
-                      handleInputChange({ target: { value: "What are the best neighborhoods for investment in Austin?" } } as any);
-                      setTimeout(() => {
-                        const form = document.querySelector('form');
-                        if (form) form.dispatchEvent(new Event('submit', { cancelable: true }));
-                      }, 100);
-                    }}
-                  >
-                    What are the best neighborhoods for investment in Austin?
-                  </Button>
-                  <Button 
-                    variant="outline" 
-                    className="justify-start"
-                    onClick={() => {
-                      handleInputChange({ target: { value: "Calculate mortgage payments for a $500,000 home with 20% down" } } as any);
-                      setTimeout(() => {
-                        const form = document.querySelector('form');
-                        if (form) form.dispatchEvent(new Event('submit', { cancelable: true }));
-                      }, 100);
-                    }}
-                  >
-                    Calculate mortgage payments for a $500,000 home with 20% down
-                  </Button>
-                  <Button 
-                    variant="outline" 
-                    className="justify-start"
-                    onClick={() => {
-                      handleInputChange({ target: { value: "Compare renting vs buying in San Francisco" } } as any);
-                      setTimeout(() => {
-                        const form = document.querySelector('form');
-                        if (form) form.dispatchEvent(new Event('submit', { cancelable: true }));
-                      }, 100);
-                    }}
-                  >
-                    Compare renting vs buying in San Francisco
-                  </Button>
-                </div>
-              </div>
-            ) : (
-              <ScrollArea className="flex-1 pr-4">
-                <div className="space-y-4 pb-4">
-                  {messages.map((message, index) => (
-                    <div
-                      key={index}
-                      className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
-                    >
-                      <div className={`flex gap-3 max-w-[80%] ${message.role === 'user' ? 'flex-row-reverse' : ''}`}>
-                        <Avatar className={message.role === 'user' ? 'bg-primary' : 'bg-muted'}>
-                          <span className="text-xs">{message.role === 'user' ? 'You' : 'AI'}</span>
-                        </Avatar>
-                        <Card className={message.role === 'user' ? 'bg-primary text-primary-foreground' : ''}>
-                          <CardContent className="p-3">
-                            <div className="whitespace-pre-wrap">{message.content}</div>
-                          </CardContent>
-                        </Card>
-                      </div>
-                    </div>
-                  ))}
-                  <div ref={messagesEndRef} />
-                </div>
-              </ScrollArea>
-            )}
-
-            <form onSubmit={handleSubmit} className="flex gap-2 pt-2">
-              <Input
-                value={input}
-                onChange={handleInputChange}
-                placeholder="Ask about real estate, properties, or market trends..."
-                className="flex-1"
-                disabled={isLoading}
-              />
-              <Button type="submit" size="icon" disabled={isLoading || !input.trim()}>
-                <Send size={18} />
+    <div className="flex h-[calc(100vh-120px)] w-full max-w-6xl mx-auto p-4">
+      <Card className="flex w-full shadow-lg rounded-xl overflow-hidden border">
+        <div className="flex w-full">
+          {/* Sidebar */}
+          <div className="hidden md:flex flex-col w-64 border-r p-4 space-y-4 bg-muted/10">
+            <Button 
+              variant="outline" 
+              className="justify-start gap-2"
+              onClick={createNewConversation}
+              disabled={isLoadingConversations}
+            >
+              <PlusCircle size={16} />
+              New Conversation
+            </Button>
+            
+            <Separator />
+            
+            <div className="space-y-1">
+              <h3 className="text-sm font-medium">Property Tools</h3>
+              <Button variant="ghost" className="w-full justify-start gap-2">
+                <Search size={16} />
+                Find Properties
               </Button>
-            </form>
-          </TabsContent>
-
-          <TabsContent value="properties" className="flex-1 p-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <Card>
-                <CardContent className="p-4 space-y-2">
-                  <div className="aspect-video bg-muted rounded-md mb-2"></div>
-                  <div className="flex justify-between items-start">
-                    <div>
-                      <h3 className="font-medium">123 Main St, Austin, TX</h3>
-                      <p className="text-sm text-muted-foreground">3 bed • 2 bath • 1,800 sqft</p>
-                    </div>
-                    <Badge>$450,000</Badge>
-                  </div>
-                  <Button variant="outline" size="sm" className="w-full">View Details</Button>
-                </CardContent>
-              </Card>
-              <Card>
-                <CardContent className="p-4 space-y-2">
-                  <div className="aspect-video bg-muted rounded-md mb-2"></div>
-                  <div className="flex justify-between items-start">
-                    <div>
-                      <h3 className="font-medium">456 Oak Ave, Austin, TX</h3>
-                      <p className="text-sm text-muted-foreground">4 bed • 3 bath • 2,200 sqft</p>
-                    </div>
-                    <Badge>$550,000</Badge>
-                  </div>
-                  <Button variant="outline" size="sm" className="w-full">View Details</Button>
-                </CardContent>
-              </Card>
+              <Button variant="ghost" className="w-full justify-start gap-2">
+                <Building size={16} />
+                Property Analysis
+              </Button>
+              <Button variant="ghost" className="w-full justify-start gap-2">
+                <Home size={16} />
+                Mortgage Calculator
+              </Button>
             </div>
-          </TabsContent>
+            
+            <Separator />
+            
+            <div className="space-y-1">
+              <h3 className="text-sm font-medium">Recent Conversations</h3>
+              <div className="space-y-1">
+                {isLoadingConversations ? (
+                  <div className="text-sm text-muted-foreground p-2">Loading...</div>
+                ) : conversations.length === 0 ? (
+                  <div className="text-sm text-muted-foreground p-2">No conversations yet</div>
+                ) : (
+                  conversations.map((conversation) => (
+                    <div key={conversation.id} className="flex items-center">
+                      <Button 
+                        variant={activeConversationId === conversation.id ? "secondary" : "ghost"} 
+                        className="w-full justify-start text-left"
+                        onClick={() => loadConversation(conversation.id!)}
+                      >
+                        <div className="truncate">{conversation.title}</div>
+                      </Button>
+                      <Button 
+                        variant="ghost" 
+                        size="icon" 
+                        className="h-8 w-8"
+                        onClick={() => deleteConversation(conversation.id!)}
+                      >
+                        <Trash2 size={14} />
+                      </Button>
+                    </div>
+                  ))
+                )}
+              </div>
+            </div>
+          </div>
 
-          <TabsContent value="history" className="flex-1 p-4">
-            <div className="space-y-4">
-              {isLoadingConversations ? (
-                <div className="text-center p-4">Loading conversations...</div>
-              ) : conversations.length === 0 ? (
-                <div className="text-center p-4">No conversations yet</div>
-              ) : (
-                <div className="space-y-4">
-                  <div className="space-y-2">
-                    <h3 className="text-sm font-medium">Your Conversations</h3>
-                    {conversations.map((conversation) => (
-                      <Card key={conversation.id}>
-                        <CardContent className="p-4">
-                          <div className="flex justify-between items-center">
-                            <div>
-                              <h4 className="font-medium">{conversation.title}</h4>
-                              <p className="text-sm text-muted-foreground">
-                                {new Date(conversation.created_time!).toLocaleDateString()}
-                              </p>
-                            </div>
-                            <div className="flex gap-2">
-                              <Button 
-                                variant="outline" 
-                                size="sm"
-                                onClick={() => loadConversation(conversation.id!)}
-                              >
-                                Open
-                              </Button>
-                              <Button 
-                                variant="ghost" 
-                                size="sm"
-                                onClick={() => deleteConversation(conversation.id!)}
-                              >
-                                <Trash2 size={16} />
-                              </Button>
-                            </div>
+          {/* Main Chat Area */}
+          <div className="flex-1 flex flex-col">
+            <Tabs defaultValue="chat" className="flex-1 flex flex-col" onValueChange={setActiveTab}>
+              <div className="border-b px-4 py-2 bg-muted/5">
+                <TabsList className="grid grid-cols-1">
+                  <TabsTrigger value="chat">Chat</TabsTrigger>
+                </TabsList>
+              </div>
+
+              <TabsContent value="chat" className="flex-1 flex flex-col p-4 space-y-4 overflow-hidden">
+                {messages.length === 0 ? (
+                  <div className="flex-1 flex flex-col items-center justify-center text-center p-8 space-y-4">
+                    <div className="bg-primary/10 p-4 rounded-full">
+                      <Sparkles className="h-10 w-10 text-primary" />
+                    </div>
+                    <h2 className="text-2xl font-bold">Welcome to Dibs AI</h2>
+                    <p className="text-muted-foreground max-w-md">
+                      Your intelligent real estate assistant. Ask me about properties, market trends, investment strategies, or anything real estate related.
+                    </p>
+                    <div className="grid gap-2 mt-4">
+                      <Button 
+                        variant="outline" 
+                        className="justify-start"
+                        onClick={() => {
+                          handleInputChange({ target: { value: "What are the best neighborhoods for investment in Austin?" } } as any);
+                          setTimeout(() => {
+                            const form = document.querySelector('form');
+                            if (form) form.dispatchEvent(new Event('submit', { cancelable: true }));
+                          }, 100);
+                        }}
+                      >
+                        What are the best neighborhoods for investment in Austin?
+                      </Button>
+                      <Button 
+                        variant="outline" 
+                        className="justify-start"
+                        onClick={() => {
+                          handleInputChange({ target: { value: "Calculate mortgage payments for a $500,000 home with 20% down" } } as any);
+                          setTimeout(() => {
+                            const form = document.querySelector('form');
+                            if (form) form.dispatchEvent(new Event('submit', { cancelable: true }));
+                          }, 100);
+                        }}
+                      >
+                        Calculate mortgage payments for a $500,000 home with 20% down
+                      </Button>
+                      <Button 
+                        variant="outline" 
+                        className="justify-start"
+                        onClick={() => {
+                          handleInputChange({ target: { value: "Compare renting vs buying in San Francisco" } } as any);
+                          setTimeout(() => {
+                            const form = document.querySelector('form');
+                            if (form) form.dispatchEvent(new Event('submit', { cancelable: true }));
+                          }, 100);
+                        }}
+                      >
+                        Compare renting vs buying in San Francisco
+                      </Button>
+                    </div>
+                  </div>
+                ) : (
+                  <ScrollArea className="flex-1 pr-4">
+                    <div className="space-y-4 pb-4">
+                      {messages.map((message, index) => (
+                        <div
+                          key={index}
+                          className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
+                        >
+                          <div className={`flex gap-3 max-w-[80%] ${message.role === 'user' ? 'flex-row-reverse' : ''}`}>
+                            <Avatar className={message.role === 'user' ? 'bg-primary' : 'bg-muted'}>
+                              <span className="text-xs">{message.role === 'user' ? 'You' : 'AI'}</span>
+                            </Avatar>
+                            <Card className={message.role === 'user' ? 'bg-primary text-primary-foreground' : ''}>
+                              <CardContent className="p-3">
+                                <div className="whitespace-pre-wrap">{message.content}</div>
+                              </CardContent>
+                            </Card>
                           </div>
-                        </CardContent>
-                      </Card>
-                    ))}
-                  </div>
-                </div>
-              )}
-            </div>
-          </TabsContent>
-        </Tabs>
-      </div>
+                        </div>
+                      ))}
+                      <div ref={messagesEndRef} />
+                    </div>
+                  </ScrollArea>
+                )}
+
+                <form onSubmit={handleSubmit} className="flex gap-2 pt-2">
+                  <Input
+                    value={input}
+                    onChange={handleInputChange}
+                    placeholder="Ask about real estate, properties, or market trends..."
+                    className="flex-1"
+                    disabled={isLoading}
+                  />
+                  <Button type="submit" size="icon" disabled={isLoading || !input.trim()}>
+                    <Send size={18} />
+                  </Button>
+                </form>
+              </TabsContent>
+            </Tabs>
+          </div>
+        </div>
+      </Card>
     </div>
   );
 } 
