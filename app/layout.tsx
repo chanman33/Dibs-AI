@@ -8,23 +8,23 @@ import type { Metadata } from 'next'
 import './globals.css'
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://starter.rasmic.xyz"),
+  metadataBase: new URL("https://dibs-ai.com"),
   title: {
-    default: 'Nextjs Starter Kit',
-    template: `%s | Nextjs Starter Kit`
+    default: 'Dibs AI | Your Intelligent Real Estate Assistant',
+    template: `%s | Dibs AI`
   },
-  description: 'The Ultimate Nextjs 14 Starter Kit for quickly building your SaaS, giving you time to focus on what really matters',
+  description: 'Dibs AI is your intelligent real estate assistant, helping you find, analyze, and make smarter property decisions with AI-powered insights',
   openGraph: {
-    description: 'The Ultimate Nextjs 14 Starter Kit for quickly building your SaaS, giving you time to focus on what really matters',
+    description: 'Dibs AI is your intelligent real estate assistant, helping you find, analyze, and make smarter property decisions with AI-powered insights',
     images: ['https://utfs.io/f/8a428f85-ae83-4ca7-9237-6f8b65411293-eun6ii.png'],
-    url: 'https://starter.rasmic.xyz/'
+    url: 'https://dibs-ai.com'
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Nextjs Starter Kit',
-    description: 'The Ultimate Nextjs 14 Starter Kit for quickly building your SaaS, giving you time to focus on what really matters',
+    title: 'Dibs AI | Your Intelligent Real Estate Assistant',
+    description: 'Dibs AI is your intelligent real estate assistant, helping you find, analyze, and make smarter property decisions with AI-powered insights',
     siteId: "",
-    creator: "@rasmic",
+    creator: "@dibsai",
     creatorId: "",
     images: ['https://utfs.io/f/8a428f85-ae83-4ca7-9237-6f8b65411293-eun6ii.png'],
   },
