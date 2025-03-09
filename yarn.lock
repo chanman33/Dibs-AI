@@ -4,7 +4,7 @@
 
 "@ai-sdk/cerebras@^0.1.13":
   version "0.1.13"
-  resolved "https://registry.npmjs.org/@ai-sdk/cerebras/-/cerebras-0.1.13.tgz"
+  resolved "https://registry.yarnpkg.com/@ai-sdk/cerebras/-/cerebras-0.1.13.tgz#eb01558279b7262ea131c4f6adb56e6ae59d428d"
   integrity sha512-jrNKpZx1LzG7+t5ARHR62PhUJ1pB6HDj7E94eTRaVZjZ6+1YkATTz5MplNsv3Eyy91JCr3GQZEyPf0dDiwKwbA==
   dependencies:
     "@ai-sdk/openai-compatible" "0.1.13"
@@ -21,7 +21,7 @@
 
 "@ai-sdk/openai@^1.2.1":
   version "1.2.1"
-  resolved "https://registry.npmjs.org/@ai-sdk/openai/-/openai-1.2.1.tgz"
+  resolved "https://registry.yarnpkg.com/@ai-sdk/openai/-/openai-1.2.1.tgz#9451cb9354f0ae5ddd7a98bb359ba84de07e5b9d"
   integrity sha512-UtVDNrmrKzb3b4T9bnpduXs4FKpWGn+sH5qaFP1mtxOPeYGUF9OoJfGilH3CNfqGAE4QdZh/LT3IV6GHacooGg==
   dependencies:
     "@ai-sdk/provider" "1.0.10"
@@ -74,6 +74,19 @@
   integrity sha512-aA63XwOkcl4xxQa3HjPMqOP6LiK0ZDv3mUPYEFXkpHbaFjtGggE1A61FjFzJnB+p7/oy2gA8E+rcBNl/zC1tMg==
   dependencies:
     regenerator-runtime "^0.14.0"
+
+"@cerebras/cerebras_cloud_sdk@^1.24.0":
+  version "1.24.0"
+  resolved "https://registry.yarnpkg.com/@cerebras/cerebras_cloud_sdk/-/cerebras_cloud_sdk-1.24.0.tgz#81cb2943ad5561e0baa09e862590a3eef2362314"
+  integrity sha512-8YwYS91sttx0Q3R8kEhsSbSmaC6Vx4WNxQNdMMSbtTEgnVYxC6iIJ51oHNXxubHvSgpIvh3O2cDIO+fxWf3hyA==
+  dependencies:
+    "@types/node" "^18.11.18"
+    "@types/node-fetch" "^2.6.4"
+    abort-controller "^3.0.0"
+    agentkeepalive "^4.2.1"
+    form-data-encoder "1.7.2"
+    formdata-node "^4.3.2"
+    node-fetch "^2.6.7"
 
 "@clerk/backend@^1.25.1":
   version "1.25.1"
@@ -1841,7 +1854,7 @@ agentkeepalive@^4.2.1:
 
 ai@^4.1.54:
   version "4.1.54"
-  resolved "https://registry.npmjs.org/ai/-/ai-4.1.54.tgz"
+  resolved "https://registry.yarnpkg.com/ai/-/ai-4.1.54.tgz#b3eef782f96659bbcb511489de2dac85a16d6cfb"
   integrity sha512-VcUZhNEC9i1OpdhDaz1cF0IllgMqhwoUdqHQT1U3dKvS9KnOa9qvEtUUAilA+VHI/1LSZF4VzGhXPC7QMT9NMg==
   dependencies:
     "@ai-sdk/provider" "1.0.10"
@@ -4129,7 +4142,7 @@ object.values@^1.1.6, object.values@^1.2.0, object.values@^1.2.1:
 
 openai@^4.86.2:
   version "4.86.2"
-  resolved "https://registry.npmjs.org/openai/-/openai-4.86.2.tgz"
+  resolved "https://registry.yarnpkg.com/openai/-/openai-4.86.2.tgz#d3ba44c6b81471b9e2d38515e0ab86ad73a02c85"
   integrity sha512-nvYeFjmjdSu6/msld+22JoUlCICNk/lUFpSMmc6KNhpeNLpqL70TqbD/8Vura/tFmYqHKW0trcjgPwUpKSPwaA==
   dependencies:
     "@types/node" "^18.11.18"

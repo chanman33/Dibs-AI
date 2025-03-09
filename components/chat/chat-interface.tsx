@@ -25,9 +25,17 @@ export default function ChatInterface() {
       conversationId: activeConversationId
     },
     onResponse: (response) => {
+      console.log('Chat response received:', response);
       // Refresh conversations after a response
       fetchConversations();
     },
+    onFinish: (message) => {
+      console.log('Chat finished:', message);
+    },
+    onError: (error) => {
+      console.error('Chat error:', error);
+      toast.error('Failed to send message');
+    }
   });
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -36,6 +44,11 @@ export default function ChatInterface() {
   // Auto-scroll to bottom of messages
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [messages]);
+
+  // Add message stream debugging
+  useEffect(() => {
+    console.log('Messages updated:', messages);
   }, [messages]);
 
   // Fetch conversations on component mount

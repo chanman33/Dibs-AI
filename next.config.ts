@@ -28,6 +28,12 @@ const nextConfig: NextConfig = {
       port: '',
       pathname: '/**'
     }]
-  }
+  },
+  env: {
+    CEREBRAS_API_KEY: process.env.CEREBRAS_API_KEY,
+  },
+  experimental: {
+    serverActions: true,
+  },
 };
 export default nextConfig;
